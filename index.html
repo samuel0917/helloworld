@@ -27,7 +27,8 @@ $(document).ready(function(){
 	    contentType: "application/json;charset=UTF-8",
 	    //请求地址
 	    url : "http://www.sibeis.cn:8083/getWxConfig1",
-	    dataType: 'callbackName',  // 请求方式为jsonp
+	    dataType: 'jsonp',  // 请求方式为jsonp
+	    jsonp : "callbackName",// 后端接口参数名
 	    jsonpCallback: "handleCallback",    // 自定义回调函数名
 	    //数据，json字符串
 	  //  data : JSON.stringify(list),

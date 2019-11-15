@@ -89,7 +89,7 @@ public class HelloworldApplication {
 		json.put("timestamp", timestamp);
 		json.put("noncestr", noncestr);
 		json.put("signature", result);
-		String resultStr=json.toJSONString();
+		String resultStr=json.toString();
       response.setContentType("text/javascript");
       Writer writer = null;
       try {
