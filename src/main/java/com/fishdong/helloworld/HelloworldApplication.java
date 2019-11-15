@@ -39,8 +39,9 @@ public class HelloworldApplication {
 		String noncestr=WxUtils.CreatenNonceStr();
 		String url="http://www.sibeis.cn";
 		long timestamp=System.currentTimeMillis();
-		log.debug(""+timestamp);
-		String result=WxUtils.shar1(ticket, noncestr, timestamp, url);
+		String timestampStr=String.valueOf(timestamp).substring(0,10);
+		log.debug(""+timestampStr);
+		String result=WxUtils.shar1(ticket, noncestr, timestampStr, url);
 		log.debug("--------------------");
 		log.debug(result);
 		JSONObject json=new JSONObject();
@@ -49,23 +50,7 @@ public class HelloworldApplication {
 		json.put("signature", result);
         return json;
     }
-    @RequestMapping(value = "/getWxConfigStr",method = RequestMethod.GET)
-    public String getWxConfigStr(){
-    	String token=WxUtils.getToken();
-		String ticket=WxUtils.getJsapiTicket(token);
-		String noncestr=WxUtils.CreatenNonceStr();
-		String url="http://www.sibeis.cn";
-		long timestamp=System.currentTimeMillis();
-		log.debug(""+timestamp);
-		String result=WxUtils.shar1(ticket, noncestr, timestamp, url);
-		log.debug("--------------------");
-		log.debug(result);
-		JSONObject json=new JSONObject();
-		json.put("timestamp", timestamp);
-		json.put("noncestr", noncestr);
-		json.put("signature", result);
-        return json.toJSONString();
-    }
+   
     
     /**
      * 解决跨域请求数据
@@ -81,8 +66,9 @@ public class HelloworldApplication {
 		String noncestr=WxUtils.CreatenNonceStr();
 		String url="http://www.sibeis.cn";
 		long timestamp=System.currentTimeMillis();
-		log.debug(""+timestamp);
-		String result=WxUtils.shar1(ticket, noncestr, timestamp, url);
+		String timestampStr=String.valueOf(timestamp).substring(0,10);
+		log.debug(""+timestampStr);
+		String result=WxUtils.shar1(ticket, noncestr, timestampStr, url);
 		log.debug("--------------------");
 		log.debug(result);
 		JSONObject json=new JSONObject();

@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
 
+import me.chanjar.weixin.common.util.crypto.SHA1;
+
 
 public class WxUtils {
 	
@@ -32,10 +34,14 @@ public class WxUtils {
 		String noncestr=CreatenNonceStr();
 		String url="http://www.sibeis.cn";
 		long timestamp=System.currentTimeMillis();
-		log.debug(""+timestamp);
-		String result=shar1(ticket, noncestr, timestamp, url);
+		String timestampStr=String.valueOf(timestamp).substring(0,10);
+		log.debug(""+timestampStr);
+		String result=shar1(ticket, noncestr, timestampStr, url);
 		log.debug("--------------------");
 		log.debug(result);
+		
+		
+	
 	}
 	
 
@@ -47,14 +53,17 @@ public class WxUtils {
 	 * @param timestamp
 	 * @param url
 	 */
-	public static String shar1(String ticket,String noncestr,Long timestamp,String url) {
+	public static String shar1(String ticket,String noncestr,String timestamp,String url) {
 		//jsapi_ticket=sM4AOVdWfPE4DxkXGEs8VMCPGGVi4C3VM0P37wVUCFvkVAy_90u5h9nbSlYy3-Sl-HhTdfl2fzFy1AOcHKP7qg&noncestr=Wm3WZYTPz0wzccnW&timestamp=1414587457&url=http://mp.weixin.qq.com?params=value
 		StringBuilder sb = new StringBuilder(); 
 		sb.append("jsapi_ticket=").append(ticket).append("&")
 		.append("noncestr=").append(noncestr).append("&")
 		.append("timestamp=").append(timestamp).append("&")
 		.append("url=").append(url);
-		String result=DigestUtils.sha1Hex(sb.toString());
+		log.debug(sb.toString());
+//		log.debug("apach...{}",DigestUtils.sha1Hex(sb.toString()));
+		String result=SHA1.gen(sb.toString());
+//		log.debug("wx util...{}",SHA1.gen(sb.toString()));
 		return result;
 		//a2c641189ac16997a42c69b40ed4cfde479a78a1
 	}
