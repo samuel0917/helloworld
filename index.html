@@ -26,8 +26,8 @@ $(document).ready(function(){
 	    //请求的媒体类型
 	    contentType: "application/json;charset=UTF-8",
 	    //请求地址
-	    url : "http://www.sibeis.cn:8083/getWxConfig",
-	    dataType: 'jsonp',  // 请求方式为jsonp
+	    url : "http://www.sibeis.cn:8083/getWxConfig1",
+	    dataType: 'callbackName',  // 请求方式为jsonp
 	    jsonpCallback: "handleCallback",    // 自定义回调函数名
 	    //数据，json字符串
 	  //  data : JSON.stringify(list),
@@ -69,7 +69,9 @@ $(document).ready(function(){
 	});
 });
 
-
+var handleCallback = function(data) {
+	console.log('接口返回的数据是：' + JSON.stringify(data));
+};
 
 
 

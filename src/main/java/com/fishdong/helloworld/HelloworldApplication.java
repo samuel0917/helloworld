@@ -1,11 +1,17 @@
 package com.fishdong.helloworld;
 
+import java.io.IOException;
+import java.io.Writer;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONObject;
@@ -61,8 +67,15 @@ public class HelloworldApplication {
         return json.toJSONString();
     }
     
-    @RequestMapping(value = "/getWxConfigStr2",method = RequestMethod.GET)
-    public String getWxConfigStr2(){
+    /**
+     * 解决跨域请求数据
+     * @param response
+     * @param callbackName 前端回调函数名
+     * @return
+     */
+    @RequestMapping(value = "getWxConfig1")
+    public void getWxConfig1(HttpServletResponse response, @RequestParam String callbackName) {
+    	
     	String token=WxUtils.getToken();
 		String ticket=WxUtils.getJsapiTicket(token);
 		String noncestr=WxUtils.CreatenNonceStr();
@@ -76,7 +89,25 @@ public class HelloworldApplication {
 		json.put("timestamp", timestamp);
 		json.put("noncestr", noncestr);
 		json.put("signature", result);
-        return json.toString();
+		String resultStr=json.toJSONString();
+      response.setContentType("text/javascript");
+      Writer writer = null;
+      try {
+       writer = response.getWriter();
+       writer.write(callbackName + "(");
+       writer.write(resultStr);
+       writer.write(");");
+      } catch (IOException e) {
+       log.error("jsonp响应写入失败！ 数据：" + resultStr, e);
+      } finally {
+       if (writer != null) {
+       try {
+        writer.close();
+       } catch (IOException e) {
+        log.error("输出流关闭异常！", e);
+       }
+       writer = null;
+       }
+      }
     }
-
 }
