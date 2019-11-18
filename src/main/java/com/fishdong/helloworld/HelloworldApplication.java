@@ -45,7 +45,7 @@ public class HelloworldApplication {
 		log.info("--------------------");
 		log.info("ticket....{}",result);
 		JSONObject json=new JSONObject();
-		json.put("timestamp", timestamp);
+		json.put("timestamp", timestampStr);
 		json.put("noncestr", noncestr);
 		json.put("signature", result);
         return json;
@@ -72,7 +72,7 @@ public class HelloworldApplication {
 		log.info("--------------------");
 		log.info("ticket....{}",result);
 		JSONObject json=new JSONObject();
-		json.put("timestamp", timestamp);
+		json.put("timestamp", timestampStr);
 		json.put("noncestr", noncestr);
 		json.put("signature", result);
 		String resultStr=json.toString();
