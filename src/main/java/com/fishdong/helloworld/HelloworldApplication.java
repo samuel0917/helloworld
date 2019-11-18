@@ -21,6 +21,12 @@ import com.alibaba.fastjson.JSONObject;
 public class HelloworldApplication {
 	
 	private Logger log=LoggerFactory.getLogger(this.getClass());
+	
+	private String token=null;
+	
+	private String ticket=null;
+	
+	private String agTicket=null;
 
     public static void main(String[] args) {
         SpringApplication.run(HelloworldApplication.class, args);
@@ -71,8 +77,10 @@ public class HelloworldApplication {
     }
     
     public String getConfitStr() {
-    	String token=WxUtils.getToken();
-		String ticket=WxUtils.getJsapiTicket(token);
+    	if(token==null)
+    	token=WxUtils.getToken();
+    	if(ticket==null)
+		ticket=WxUtils.getJsapiTicket(token);
 		String noncestr=WxUtils.CreatenNonceStr();
 		String url="http://www.sibeis.cn";
 		long timestamp=System.currentTimeMillis();
@@ -81,15 +89,23 @@ public class HelloworldApplication {
 		String result=WxUtils.shar1(ticket, noncestr, timestampStr, url);
 		log.info("--------------------");
 		log.info("ticket....{}",result);
-		String agentConfigTicket=WxUtils.getAcJsapiTicket(token);
-		String agentConfigShar1=WxUtils.shar1(agentConfigTicket, noncestr, timestampStr, url);
+		
+		if(agTicket==null)
+			agTicket=WxUtils.getAcJsapiTicket(token);
+		String agnoncestr=WxUtils.CreatenNonceStr();
+		long agtimestamp=System.currentTimeMillis();
+		String agtimestampStr=String.valueOf(agtimestamp).substring(0,10);
+		String agentConfigShar1=WxUtils.shar1(agTicket, agnoncestr, agtimestampStr, url);
 		JSONObject json=new JSONObject();
 		json.put("timestamp", timestampStr);
 		json.put("noncestr", noncestr);
 		json.put("signature", result);
-		json.put("agsignature", agentConfigShar1);
 		json.put("ticket", ticket);
-		json.put("agentConfigTicket", agentConfigTicket);
+		
+		json.put("agtimestampStr", agtimestampStr);
+		json.put("agnoncestr", agnoncestr);
+		json.put("agsignature", agentConfigShar1);
+		json.put("agentConfigTicket", agTicket);
 		String resultStr=json.toString();
 		log.info("resultStr....{}",resultStr);
 		
