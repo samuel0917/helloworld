@@ -40,10 +40,10 @@ public class HelloworldApplication {
 		String url="http://www.sibeis.cn";
 		long timestamp=System.currentTimeMillis();
 		String timestampStr=String.valueOf(timestamp).substring(0,10);
-		log.debug(""+timestampStr);
+		log.info("timestampStr...{}",timestampStr);
 		String result=WxUtils.shar1(ticket, noncestr, timestampStr, url);
-		log.debug("--------------------");
-		log.debug(result);
+		log.info("--------------------");
+		log.info("ticket....{}",result);
 		JSONObject json=new JSONObject();
 		json.put("timestamp", timestamp);
 		json.put("noncestr", noncestr);
@@ -67,15 +67,16 @@ public class HelloworldApplication {
 		String url="http://www.sibeis.cn";
 		long timestamp=System.currentTimeMillis();
 		String timestampStr=String.valueOf(timestamp).substring(0,10);
-		log.debug(""+timestampStr);
+		log.info("timestampStr...{}",timestampStr);
 		String result=WxUtils.shar1(ticket, noncestr, timestampStr, url);
-		log.debug("--------------------");
-		log.debug(result);
+		log.info("--------------------");
+		log.info("ticket....{}",result);
 		JSONObject json=new JSONObject();
 		json.put("timestamp", timestamp);
 		json.put("noncestr", noncestr);
 		json.put("signature", result);
 		String resultStr=json.toString();
+		log.info("resultStr....{}",resultStr);
       response.setContentType("text/javascript");
       Writer writer = null;
       try {
