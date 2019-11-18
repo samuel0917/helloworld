@@ -44,10 +44,13 @@ public class HelloworldApplication {
 		String result=WxUtils.shar1(ticket, noncestr, timestampStr, url);
 		log.info("--------------------");
 		log.info("ticket....{}",result);
+		String agentConfigTicket=WxUtils.getAcJsapiTicket(token);
+		String agentConfigShar1=WxUtils.shar1(agentConfigTicket, noncestr, timestampStr, url);
 		JSONObject json=new JSONObject();
 		json.put("timestamp", timestampStr);
 		json.put("noncestr", noncestr);
 		json.put("signature", result);
+		json.put("agsignature", agentConfigShar1);
         return json;
     }
    
@@ -71,10 +74,13 @@ public class HelloworldApplication {
 		String result=WxUtils.shar1(ticket, noncestr, timestampStr, url);
 		log.info("--------------------");
 		log.info("ticket....{}",result);
+		String agentConfigTicket=WxUtils.getAcJsapiTicket(token);
+		String agentConfigShar1=WxUtils.shar1(agentConfigTicket, noncestr, timestampStr, url);
 		JSONObject json=new JSONObject();
 		json.put("timestamp", timestampStr);
 		json.put("noncestr", noncestr);
 		json.put("signature", result);
+		json.put("agsignature", agentConfigShar1);
 		String resultStr=json.toString();
 		log.info("resultStr....{}",resultStr);
       response.setContentType("text/javascript");

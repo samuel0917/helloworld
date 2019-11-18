@@ -40,8 +40,9 @@ public class WxUtils {
 		log.debug("--------------------");
 		log.debug(result);
 		
-		
-	
+		String result2=getAcJsapiTicket(token);
+		log.debug("--------------------");
+		log.debug("result2...{}",result2);
 	}
 	
 
@@ -69,13 +70,28 @@ public class WxUtils {
 	}
 	
 	/**
-	 * 获取企业的jsapi_ticket
+	 * 获取企业的jsapi_ticket wx.config
 	 * @return
 	 */
 	public static String getJsapiTicket(String token) {
 		String url="https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token="+token;
 		String result=sendGet(url);
 		log.debug("get getJsapiTicket result...{}",result);
+		JSONObject json = JSONObject.parseObject(result);
+		String ticket=json.getString("ticket");
+		log.debug(ticket);
+		return ticket;
+		//kgt8ON7yVITDhtdwci0qeRciXbcplrJ_Hc7NLZIdUnSkORSHLkSLUd_gBqRNfVO4HFoNxKn9WdfWeGUd4_u3NQ
+	}
+	
+	/**
+	 * 获取企业的jsapi_ticket wx.agentConfig
+	 * @return
+	 */
+	public static String getAcJsapiTicket(String token) {
+		String url="https://qyapi.weixin.qq.com/cgi-bin/ticket/get?access_token="+token+"&type=agent_config";
+		String result=sendGet(url);
+		log.debug("get getAcJsapiTicket result...{}",result);
 		JSONObject json = JSONObject.parseObject(result);
 		String ticket=json.getString("ticket");
 		log.debug(ticket);
