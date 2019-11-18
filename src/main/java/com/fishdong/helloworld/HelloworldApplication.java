@@ -38,10 +38,104 @@ public class HelloworldApplication {
         return "Hello World.";
     }
     
-    @RequestMapping(value = "/getWxConfig",method = RequestMethod.GET)
-    public String getWxConfig(){
-    	String resultStr=getConfitStr();
-        return resultStr;
+   
+    /**
+     * 解决跨域请求数据
+     * @param response
+     * @param callbackName 前端回调函数名
+     * @return
+     */
+    @RequestMapping(value = "getWxAgConfig")
+    public void getWxAgConfig(HttpServletResponse response, @RequestParam String callbackName) {
+    	
+    	if(token==null)
+        	token=WxUtils.getToken();
+    	String url="http://www.sibeis.cn";
+    		
+    		if(agTicket==null)
+    			agTicket=WxUtils.getAcJsapiTicket(token);
+    		String agnoncestr=WxUtils.CreatenNonceStr();
+    		long agtimestamp=System.currentTimeMillis();
+    		String agtimestampStr=String.valueOf(agtimestamp).substring(0,10);
+    		String agentConfigShar1=WxUtils.shar1(agTicket, agnoncestr, agtimestampStr, url);
+    		JSONObject json=new JSONObject();
+    		json.put("agtimestampStr", agtimestampStr);
+    		json.put("agnoncestr", agnoncestr);
+    		json.put("agsignature", agentConfigShar1);
+    		json.put("agentConfigTicket", agTicket);
+    		String resultStr=json.toString();
+    	
+    	
+      response.setContentType("text/javascript");
+      Writer writer = null;
+      try {
+       writer = response.getWriter();
+       writer.write(callbackName + "(");
+       writer.write(resultStr);
+       writer.write(");");
+      } catch (IOException e) {
+       log.error("jsonp响应写入失败！ 数据：" + resultStr, e);
+      } finally {
+       if (writer != null) {
+       try {
+        writer.close();
+       } catch (IOException e) {
+        log.error("输出流关闭异常！", e);
+       }
+       writer = null;
+       }
+      }
+    }
+    
+    /**
+     * 解决跨域请求数据
+     * @param response
+     * @param callbackName 前端回调函数名
+     * @return
+     */
+    @RequestMapping(value = "getWxConfig")
+    public void getWxConfig(HttpServletResponse response, @RequestParam String callbackName) {
+    	
+    	if(token==null)
+        	token=WxUtils.getToken();
+        	if(ticket==null)
+    		ticket=WxUtils.getJsapiTicket(token);
+    		String noncestr=WxUtils.CreatenNonceStr();
+    		String url="http://www.sibeis.cn";
+    		long timestamp=System.currentTimeMillis();
+    		String timestampStr=String.valueOf(timestamp).substring(0,10);
+    		log.info("timestampStr...{}",timestampStr);
+    		String result=WxUtils.shar1(ticket, noncestr, timestampStr, url);
+    		log.info("--------------------");
+    		log.info("ticket....{}",result);
+    	
+    		JSONObject json=new JSONObject();
+    		json.put("timestamp", timestampStr);
+    		json.put("noncestr", noncestr);
+    		json.put("signature", result);
+    		json.put("ticket", ticket);
+    		String resultStr=json.toString();
+    	
+    	
+      response.setContentType("text/javascript");
+      Writer writer = null;
+      try {
+       writer = response.getWriter();
+       writer.write(callbackName + "(");
+       writer.write(resultStr);
+       writer.write(");");
+      } catch (IOException e) {
+       log.error("jsonp响应写入失败！ 数据：" + resultStr, e);
+      } finally {
+       if (writer != null) {
+       try {
+        writer.close();
+       } catch (IOException e) {
+        log.error("输出流关闭异常！", e);
+       }
+       writer = null;
+       }
+      }
     }
    
     
