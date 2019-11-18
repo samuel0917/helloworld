@@ -27,6 +27,8 @@ public class HelloworldApplication {
 	private String ticket=null;
 	
 	private String agTicket=null;
+	
+	private String url="http://www.sibeis.cn/";
 
     public static void main(String[] args) {
         SpringApplication.run(HelloworldApplication.class, args);
@@ -50,7 +52,6 @@ public class HelloworldApplication {
     	
     	if(token==null)
         	token=WxUtils.getToken();
-    	String url="http://www.sibeis.cn";
     		
     		if(agTicket==null)
     			agTicket=WxUtils.getAcJsapiTicket(token);
@@ -101,7 +102,7 @@ public class HelloworldApplication {
         	if(ticket==null)
     		ticket=WxUtils.getJsapiTicket(token);
     		String noncestr=WxUtils.CreatenNonceStr();
-    		String url="http://www.sibeis.cn";
+    		
     		long timestamp=System.currentTimeMillis();
     		String timestampStr=String.valueOf(timestamp).substring(0,10);
     		log.info("timestampStr...{}",timestampStr);
@@ -176,7 +177,6 @@ public class HelloworldApplication {
     	if(ticket==null)
 		ticket=WxUtils.getJsapiTicket(token);
 		String noncestr=WxUtils.CreatenNonceStr();
-		String url="http://www.sibeis.cn";
 		long timestamp=System.currentTimeMillis();
 		String timestampStr=String.valueOf(timestamp).substring(0,10);
 		log.info("timestampStr...{}",timestampStr);
