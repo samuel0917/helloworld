@@ -35,14 +35,23 @@ public class WxUtils {
 		String url="http://www.sibeis.cn";
 		long timestamp=System.currentTimeMillis();
 		String timestampStr=String.valueOf(timestamp).substring(0,10);
-		log.debug(""+timestampStr);
+		log.info("timestampStr...{}",timestampStr);
 		String result=shar1(ticket, noncestr, timestampStr, url);
-		log.debug("--------------------");
-		log.debug(result);
+		log.info("--------------------");
+		log.info(result);
 		
-		String result2=getAcJsapiTicket(token);
-		log.debug("--------------------");
-		log.debug("result2...{}",result2);
+		String acticket=getAcJsapiTicket(token);
+		String shar2=shar1(acticket, noncestr, timestampStr, url);
+		log.info("--------------------");
+		log.info("result2...{}",shar2);
+	}
+	
+	public static void testShar1() {
+		String ticket="";
+		String noncestr="";
+		String timestamp="";
+		String url="";
+		String shar1=shar1(ticket, noncestr, timestamp, url);
 	}
 	
 
@@ -61,10 +70,12 @@ public class WxUtils {
 		.append("noncestr=").append(noncestr).append("&")
 		.append("timestamp=").append(timestamp).append("&")
 		.append("url=").append(url);
-		log.debug(sb.toString());
-//		log.debug("apach...{}",DigestUtils.sha1Hex(sb.toString()));
-		String result=SHA1.gen(sb.toString());
-//		log.debug("wx util...{}",SHA1.gen(sb.toString()));
+		log.info("shar1 String");
+		log.info(sb.toString());
+//		log.info("apach...{}",DigestUtils.sha1Hex(sb.toString()));
+//		String result=SHA1.gen(sb.toString());
+		String result=DigestUtils.sha1Hex(sb.toString());
+//		log.info("wx util...{}",SHA1.gen(sb.toString()));
 		return result;
 		//a2c641189ac16997a42c69b40ed4cfde479a78a1
 	}
@@ -76,10 +87,10 @@ public class WxUtils {
 	public static String getJsapiTicket(String token) {
 		String url="https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token="+token;
 		String result=sendGet(url);
-		log.debug("get getJsapiTicket result...{}",result);
+		log.info("get getJsapiTicket result...{}",result);
 		JSONObject json = JSONObject.parseObject(result);
 		String ticket=json.getString("ticket");
-		log.debug(ticket);
+		log.info(ticket);
 		return ticket;
 		//kgt8ON7yVITDhtdwci0qeRciXbcplrJ_Hc7NLZIdUnSkORSHLkSLUd_gBqRNfVO4HFoNxKn9WdfWeGUd4_u3NQ
 	}
@@ -91,10 +102,10 @@ public class WxUtils {
 	public static String getAcJsapiTicket(String token) {
 		String url="https://qyapi.weixin.qq.com/cgi-bin/ticket/get?access_token="+token+"&type=agent_config";
 		String result=sendGet(url);
-		log.debug("get getAcJsapiTicket result...{}",result);
+		log.info("get getAcJsapiTicket result...{}",result);
 		JSONObject json = JSONObject.parseObject(result);
 		String ticket=json.getString("ticket");
-		log.debug(ticket);
+		log.info(ticket);
 		return ticket;
 		//kgt8ON7yVITDhtdwci0qeRciXbcplrJ_Hc7NLZIdUnSkORSHLkSLUd_gBqRNfVO4HFoNxKn9WdfWeGUd4_u3NQ
 	}
@@ -106,10 +117,10 @@ public class WxUtils {
 	public static String getToken() {
 		String tokenUrl="https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wxc99729d223a63c12&corpsecret=asT_0RWy2FP6MNBid3dSAmVomqw676uzHI0z7Sbfiws";
 		String result=sendGet(tokenUrl);
-		log.debug("get token result...{}",result);
+		log.info("get token result...{}",result);
 		JSONObject json = JSONObject.parseObject(result);
 		String token=json.getString("access_token");
-		log.debug(token);
+		log.info(token);
 		return token;
 		//bGGCjg_DlnYyMaHpr40i2CRuJ2ZX01iNYjMfvGfnhyWSovZrBCRZ3wcDGKEtKOuRKR2AmhI97-lgkS-3vlwGdVt7Zhb8EFzGhnPV0IWhLIULazBXtTocr7Mkhr5pcYFdvGJUA0fBQFDxNlpYwLulDez4lwRBFyWGzDQPar_4PG63A9Olk3hkFlc0oklWJK3jGmmkqPa90mbJt6-Ll3wcSA
 	}
@@ -125,7 +136,7 @@ public class WxUtils {
             sb.append(strs[r.nextInt(strs.length - 1)]);
         }
         
-		log.debug("noncestr.......{}",sb.toString());
+		log.info("noncestr.......{}",sb.toString());
         return sb.toString();
     }
 	

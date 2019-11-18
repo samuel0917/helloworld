@@ -37,6 +37,8 @@ $(document).ready(function(){
 	        console.log("---------"+datad.timestamp);
 	        console.log("---------"+datad.noncestr);
 	        console.log("---------"+datad.signature);
+	        console.log("---------"+datad.agsignature);
+	        console.log("config start---------"+JSON.stringify(datad));
 	     //   var datad = JSON.parse(data); //转译为Json字符串
 		　　　  wx.config({
 				    beta: true,// 必须这么写，否则wx.invoke调用形式的jsapi会有问题
@@ -57,6 +59,7 @@ $(document).ready(function(){
 				    jsApiList: ["thirdPartyOpenPage"], //必填
 				    success: function(res) {
 				        // 回调
+				        alert("agentConfig success....");
 				    },
 				    fail: function(res) {
 				        if(res.errMsg.indexOf('function not exist') > -1){
@@ -82,7 +85,9 @@ var handleCallback = function(data) {
 
 
 wx.ready(function(){
-    // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+	console.log("wx.ready start---------");
+	 alert("wx.ready start....");
+	// config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
 	wx.invoke('thirdPartyOpenPage', {
     "oaType": "10001",// String
     "templateId": "0accb36f54640a0110b32e09de10be95_822742807",// String

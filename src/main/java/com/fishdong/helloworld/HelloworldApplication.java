@@ -33,25 +33,9 @@ public class HelloworldApplication {
     }
     
     @RequestMapping(value = "/getWxConfig",method = RequestMethod.GET)
-    public JSONObject getWxConfig(){
-    	String token=WxUtils.getToken();
-		String ticket=WxUtils.getJsapiTicket(token);
-		String noncestr=WxUtils.CreatenNonceStr();
-		String url="http://www.sibeis.cn";
-		long timestamp=System.currentTimeMillis();
-		String timestampStr=String.valueOf(timestamp).substring(0,10);
-		log.info("timestampStr...{}",timestampStr);
-		String result=WxUtils.shar1(ticket, noncestr, timestampStr, url);
-		log.info("--------------------");
-		log.info("ticket....{}",result);
-		String agentConfigTicket=WxUtils.getAcJsapiTicket(token);
-		String agentConfigShar1=WxUtils.shar1(agentConfigTicket, noncestr, timestampStr, url);
-		JSONObject json=new JSONObject();
-		json.put("timestamp", timestampStr);
-		json.put("noncestr", noncestr);
-		json.put("signature", result);
-		json.put("agsignature", agentConfigShar1);
-        return json;
+    public String getWxConfig(){
+    	String resultStr=getConfitStr();
+        return resultStr;
     }
    
     
@@ -64,25 +48,7 @@ public class HelloworldApplication {
     @RequestMapping(value = "getWxConfig1")
     public void getWxConfig1(HttpServletResponse response, @RequestParam String callbackName) {
     	
-    	String token=WxUtils.getToken();
-		String ticket=WxUtils.getJsapiTicket(token);
-		String noncestr=WxUtils.CreatenNonceStr();
-		String url="http://www.sibeis.cn";
-		long timestamp=System.currentTimeMillis();
-		String timestampStr=String.valueOf(timestamp).substring(0,10);
-		log.info("timestampStr...{}",timestampStr);
-		String result=WxUtils.shar1(ticket, noncestr, timestampStr, url);
-		log.info("--------------------");
-		log.info("ticket....{}",result);
-		String agentConfigTicket=WxUtils.getAcJsapiTicket(token);
-		String agentConfigShar1=WxUtils.shar1(agentConfigTicket, noncestr, timestampStr, url);
-		JSONObject json=new JSONObject();
-		json.put("timestamp", timestampStr);
-		json.put("noncestr", noncestr);
-		json.put("signature", result);
-		json.put("agsignature", agentConfigShar1);
-		String resultStr=json.toString();
-		log.info("resultStr....{}",resultStr);
+    	String resultStr=getConfitStr();
       response.setContentType("text/javascript");
       Writer writer = null;
       try {
@@ -102,5 +68,31 @@ public class HelloworldApplication {
        writer = null;
        }
       }
+    }
+    
+    public String getConfitStr() {
+    	String token=WxUtils.getToken();
+		String ticket=WxUtils.getJsapiTicket(token);
+		String noncestr=WxUtils.CreatenNonceStr();
+		String url="http://www.sibeis.cn";
+		long timestamp=System.currentTimeMillis();
+		String timestampStr=String.valueOf(timestamp).substring(0,10);
+		log.info("timestampStr...{}",timestampStr);
+		String result=WxUtils.shar1(ticket, noncestr, timestampStr, url);
+		log.info("--------------------");
+		log.info("ticket....{}",result);
+		String agentConfigTicket=WxUtils.getAcJsapiTicket(token);
+		String agentConfigShar1=WxUtils.shar1(agentConfigTicket, noncestr, timestampStr, url);
+		JSONObject json=new JSONObject();
+		json.put("timestamp", timestampStr);
+		json.put("noncestr", noncestr);
+		json.put("signature", result);
+		json.put("agsignature", agentConfigShar1);
+		json.put("ticket", ticket);
+		json.put("agentConfigTicket", agentConfigTicket);
+		String resultStr=json.toString();
+		log.info("resultStr....{}",resultStr);
+		
+		return resultStr;
     }
 }
