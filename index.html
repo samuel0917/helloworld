@@ -20,15 +20,14 @@
 <script type="text/javascript" >
 $(document).ready(function(){
 	console.log("ready---------");
-	//alert(location.href.split(‘#’)[0]);
-	alert(window.location.href);
+	//alert(window.location.href);
 	$.ajax({
 	    //请求方式
 	    type : "GET",
 	    //请求的媒体类型
 	    contentType: "application/json;charset=UTF-8",
 	    //请求地址
-	    url : "http://www.sibeis.cn:8083/getWxConfig",
+	    url : "http://www.sibeis.cn:8083/getWxConfig1",
 	    dataType: 'jsonp',  // 请求方式为jsonp
 	    jsonp : "callbackName",// 后端接口参数名
 	    jsonpCallback: "handleCallback",    // 自定义回调函数名
@@ -50,78 +49,58 @@ $(document).ready(function(){
 				    signature: datad.signature,// 必填，签名，见附录1
 				    jsApiList: ["thirdPartyOpenPage"] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
 			   });
-		  		wx.ready(function(){
-					console.log("wx.ready start---------");
-					 alert("wx.ready start....");
-				/*  $.ajax({
-					    //请求方式
-					    type : "GET",
-					    //请求的媒体类型
-					    contentType: "application/json;charset=UTF-8",
-					    //请求地址
-					    url : "http://www.sibeis.cn:8083/getWxAgConfig",
-					    dataType: 'jsonp',  // 请求方式为jsonp
-					    jsonp : "callbackName",// 后端接口参数名
-					    jsonpCallback: "handleCallback",    // 自定义回调函数名
-					    //数据，json字符串
-					  //  data : JSON.stringify(list),
-					    //请求成功
-					    success : function(datad) {
-					        console.log("config start---------"+JSON.stringify(datad));
-					     //   var datad = JSON.parse(data); //转译为Json字符串
-						    console.log("agentConfig start---------");
-						    console.log("---------"+datad.agtimestampStr);
-					        console.log("---------"+datad.agnoncestr);
-					        console.log("---------"+datad.agsignature);
-							   wx.agentConfig({
-								    debug: true, 
-								    corpid: 'wxc99729d223a63c12', // 必填，企业微信的corpid，必须与当前登录的企业一致
-								    agentid: 1000012, // 必填，企业微信的应用id
-								    timestamp: datad.agtimestampStr, // 必填，生成签名的时间戳
-								    nonceStr: datad.agnoncestr, // 必填，生成签名的随机串
-								    signature: datad.agsignature,// 必填，签名，见附录1
-								    jsApiList: ["thirdPartyOpenPage"], //必填
-								    success: function(res) {
-								        // 回调
-								        alert("agentConfig success....");
-								    },
-								    fail: function(res) {
-								        if(res.errMsg.indexOf('function not exist') > -1){
-								            alert('版本过低请升级')
-								        }
-								    }
-								});
-					        
-					    },
-					    //请求失败，包含具体的错误信息
-					    error : function(e){
-					        console.log("error...."+JSON.stringify(e));
-					    }
-					}); */
-				 
+		  		
+		 		wx.ready(function(){
 				// config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
-				/* wx.invoke('thirdPartyOpenPage', {
-			    "oaType": "1911180001",// String
-			    "templateId": "0accb36f54640a0110b32e09de10be95_822742807",// String
-			    "thirdNo": "thirdNo",// String
-			    "extData": {
-			        'fieldList': [{
-			            'title': '采购类型',
-			            'type': 'text',
-			            'value': '市场活动',
-			        },
-			        {
-			            'title': '订单链接',
-			            'type': 'link',
-			            'value': 'https://work.weixin.qq.com',
-			        }],
-			    }
-				},
-				function(res) {
-				    // 输出接口的回调信息
-				    console.log(res);
-				}); */
-			});
+				console.log("wx.ready start---------");
+				 alert("wx.ready start....");
+				
+				    	wx.agentConfig({
+						    //debug: true, 
+						    corpid: 'wxc99729d223a63c12', // 必填，企业微信的corpid，必须与当前登录的企业一致
+						    agentid: 1000012, // 必填，企业微信的应用id
+						    timestamp: datad.agtimestampStr, // 必填，生成签名的时间戳
+						    nonceStr: datad.agnoncestr, // 必填，生成签名的随机串
+						    signature: datad.agsignature,// 必填，签名，见附录1
+						    jsApiList: ["thirdPartyOpenPage"], //必填
+						    success: function(res) {
+					        // 回调
+						        var thirdNo=new Date().getTime()+"001";
+						        alert("agentConfig success...."+thirdNo);
+						        wx.invoke('thirdPartyOpenPage', {
+						        	"oaType": "10001",// String
+						        	"templateId": "0accb36f54640a0110b32e09de10be95_822742807",// String
+						        	"thirdNo": thirdNo,// String
+						        	"extData": {
+						        	    'fieldList': [{
+						        	        'title': '采购类型',
+						        	        'type': 'text',
+						        	        'value': '市场活动',
+						        	    },
+						        	    {
+						        	        'title': '订单链接',
+						        	        'type': 'link',
+						        	        'value': 'https://work.weixin.qq.com',
+						        	    }],
+						        	}
+						        	},
+						        	function(res) {
+						        	    // 输出接口的回调信息
+						        	    alert("wx.invoke res...."+JSON.stringify(res));
+						        	}); 
+						    },
+						    fail: function(res) {
+						        if(res.errMsg.indexOf('function not exist') > -1){
+						            alert('版本过低请升级')
+						        }
+						    }
+						});
+				        
+				});
+
+	     
+		 	 
+	     
 		  		wx.error(function(res){
 			    // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
 					alert("调用wx.config异常:"+res.errMsg);
@@ -140,8 +119,79 @@ var handleCallback = function(data) {
 
 
 
+/* wx.ready(function(){
+	// config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+	console.log("wx.ready start---------");
+	 alert("wx.ready start....");
+$.ajax({
+	    //请求方式
+	    type : "GET",
+	    //请求的媒体类型
+	    contentType: "application/json;charset=UTF-8",
+	    //请求地址
+	    url : "http://www.sibeis.cn:8083/getWxAgConfig",
+	    dataType: 'jsonp',  // 请求方式为jsonp
+	    jsonp : "callbackName",// 后端接口参数名
+	    jsonpCallback: "handleCallback",    // 自定义回调函数名
+	    //数据，json字符串
+	  //  data : JSON.stringify(list),
+	    //请求成功
+	    success : function(datad) {
+	        console.log("config start---------"+JSON.stringify(datad));
+	     //   var datad = JSON.parse(data); //转译为Json字符串
+		    console.log("agentConfig start---------");
+		    console.log("---------"+datad.agtimestampStr);
+	        console.log("---------"+datad.agnoncestr);
+	        console.log("---------"+datad.agsignature);
+	    	wx.agentConfig({
+			    debug: true, 
+			    corpid: 'wxc99729d223a63c12', // 必填，企业微信的corpid，必须与当前登录的企业一致
+			    agentid: 1000012, // 必填，企业微信的应用id
+			    timestamp: datad.agtimestampStr, // 必填，生成签名的时间戳
+			    nonceStr: datad.agnoncestr, // 必填，生成签名的随机串
+			    signature: datad.agsignature,// 必填，签名，见附录1
+			    jsApiList: ["thirdPartyOpenPage"], //必填
+			    success: function(res) {
+		        // 回调
+			        alert("agentConfig success....");
+			        wx.invoke('thirdPartyOpenPage', {
+			        	"oaType": "1911180001",// String
+			        	"templateId": "0accb36f54640a0110b32e09de10be95_822742807",// String
+			        	"thirdNo": "thirdNo",// String
+			        	"extData": {
+			        	    'fieldList': [{
+			        	        'title': '采购类型',
+			        	        'type': 'text',
+			        	        'value': '市场活动',
+			        	    },
+			        	    {
+			        	        'title': '订单链接',
+			        	        'type': 'link',
+			        	        'value': 'https://work.weixin.qq.com',
+			        	    }],
+			        	}
+			        	},
+			        	function(res) {
+			        	    // 输出接口的回调信息
+			        	    alert("wx.invoke res...."+JSON.stringify(res));
+			        	}); 
+			    },
+			    fail: function(res) {
+			        if(res.errMsg.indexOf('function not exist') > -1){
+			            alert('版本过低请升级')
+			        }
+			    }
+			});
+	        
+	    },
+	    //请求失败，包含具体的错误信息
+	    error : function(e){
+	        console.log("error...."+JSON.stringify(e));
+	    }
+	});  
 
-
+});
+ */
 
 
 
