@@ -1,8 +1,7 @@
-﻿package com.fishdong.helloworld.wx;
+package com.fishdong.helloworld.wx;
 
 @SuppressWarnings("serial")
-public class AesException extends Exception {
-
+public class AesException extends Exception{
 	public final static int OK = 0;
 	public final static int ValidateSignatureError = -40001;
 	public final static int ParseXmlError = -40002;
@@ -12,12 +11,9 @@ public class AesException extends Exception {
 	public final static int EncryptAESError = -40006;
 	public final static int DecryptAESError = -40007;
 	public final static int IllegalBuffer = -40008;
-	//public final static int EncodeBase64Error = -40009;
-	//public final static int DecodeBase64Error = -40010;
-	//public final static int GenReturnXmlError = -40011;
-
+	
 	private int code;
-
+	
 	private static String getMessage(int code) {
 		switch (code) {
 		case ValidateSignatureError:
@@ -36,12 +32,6 @@ public class AesException extends Exception {
 			return "aes解密失败";
 		case IllegalBuffer:
 			return "解密后得到的buffer非法";
-//		case EncodeBase64Error:
-//			return "base64加密错误";
-//		case DecodeBase64Error:
-//			return "base64解密错误";
-//		case GenReturnXmlError:
-//			return "xml生成失败";
 		default:
 			return null; // cannot be
 		}
@@ -55,5 +45,4 @@ public class AesException extends Exception {
 		super(getMessage(code));
 		this.code = code;
 	}
-
 }
