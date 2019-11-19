@@ -3,16 +3,28 @@ package com.fishdong.helloworld;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Random;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fishdong.helloworld.wx.AesException;
+import com.fishdong.helloworld.wx.MessageUtil;
+import com.fishdong.helloworld.wx.XMLParse;
 
 import me.chanjar.weixin.common.util.crypto.SHA1;
 
@@ -29,21 +41,29 @@ public class WxUtils {
 	
 	
 	public static void main(String[] args) {
-		String token=getToken();
-		String ticket=getJsapiTicket(token);
-		String noncestr=CreatenNonceStr();
-		String url="http://www.sibeis.cn";
-		long timestamp=System.currentTimeMillis();
-		String timestampStr=String.valueOf(timestamp).substring(0,10);
-		log.info("timestampStr...{}",timestampStr);
-		String result=shar1(ticket, noncestr, timestampStr, url);
-		log.info("--------------------");
-		log.info(result);
-		
-		String acticket=getAcJsapiTicket(token);
-		String shar2=shar1(acticket, noncestr, timestampStr, url);
-		log.info("--------------------");
-		log.info("result2...{}",shar2);
+//		String token=getToken();
+//		String ticket=getJsapiTicket(token);
+//		String noncestr=CreatenNonceStr();
+//		String url="http://www.sibeis.cn";
+//		long timestamp=System.currentTimeMillis();
+//		String timestampStr=String.valueOf(timestamp).substring(0,10);
+//		log.info("timestampStr...{}",timestampStr);
+//		String result=shar1(ticket, noncestr, timestampStr, url);
+//		log.info("--------------------");
+//		log.info(result);
+//		
+//		String acticket=getAcJsapiTicket(token);
+//		String shar2=shar1(acticket, noncestr, timestampStr, url);
+//		log.info("--------------------");
+//		log.info("result2...{}",shar2);
+		String xml="<xml><ToUserName><![CDATA[wxc99729d223a63c12]]></ToUserName><FromUserName><![CDATA[2107]]></FromUserName><CreateTime>1574154627</CreateTime><MsgType><![CDATA[event]]></MsgType><AgentID>1000012</AgentID><Event><![CDATA[view]]></Event><EventKey><![CDATA[http://www.sibeis.cn]]></EventKey></xml>";
+		try {
+			// TODO: 解析出明文xml标签的内容进行处理
+			
+			log.info(JSON.toJSONString(MessageUtil.parseXml(xml)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void testShar1() {

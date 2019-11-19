@@ -2,7 +2,7 @@ package com.fishdong.helloworld.wx;
 
 import java.util.ArrayList;
 
-class ByteGroup {
+public class ByteGroup {
 	ArrayList<Byte> byteContainer = new ArrayList<Byte>();
 
 	public byte[] toBytes() {
