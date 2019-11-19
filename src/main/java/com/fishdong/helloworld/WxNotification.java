@@ -85,7 +85,7 @@ public class WxNotification {
 	}
 	
 	@PostMapping("approveResult")
-	public void approveResultPost(HttpServletRequest request, HttpServletResponse response) {
+	public void approveResultPost(HttpServletRequest request) {
 		log.info("approveResult post sart......");
 		// 微信加密签名  
         String msg_signature = request.getParameter("msg_signature");  
@@ -99,16 +99,17 @@ public class WxNotification {
         // 随机字符串  
         String echostr = request.getParameter("echostr");  
         log.info("echostr......{}",echostr);
-        log.info("request...{}" + request.getRequestURL());  
-        PrintWriter out=null;
+        log.info("request...{}",request.getRequestURL());  
 		try {
-			out = response.getWriter();
 			  // 通过检验msg_signature对请求进行校验，若校验成功则原样返回echostr，表示接入成功，否则接入失败  
 	        String result = null;  
-	        try {
+	        	InputStream inputStream = request.getInputStream();
+		        String sPostData = IOUtils.toString(inputStream,"UTF-8");
+		        log.info("sPostData......{}",sPostData);
 	        	WXBizMsgCrypt wxcpt = new WXBizMsgCrypt(token,encodingAESKey, corpId);  
-	            result = wxcpt.VerifyURL(msg_signature, timestamp, nonce, echostr);  
-	            log.info("VerifyURL result......{}",result);
+//	            result = wxcpt.VerifyURL(msg_signature, timestamp, nonce, echostr);  
+	        	result = wxcpt.DecryptMsg(msg_signature,timestamp,nonce,sPostData);
+	            log.info("DecryptMsg result......{}",result);
 	            /*
 	            企业收到post请求之后应该		1.解析出url上的参数，包括消息体签名(msg_signature)，时间戳(timestamp)以及随机数字串(nonce)
 	    		2.验证消息体签名的正确性。
@@ -118,44 +119,24 @@ public class WxNotification {
 	    		// post请求的密文数据
 	    		// sReqData = HttpUtils.PostData();
 //	    		String sReqData = "<xml><ToUserName><![CDATA[wx5823bf96d3bd56c7]]></ToUserName><Encrypt><![CDATA[RypEvHKD8QQKFhvQ6QleEB4J58tiPdvo+rtK1I9qca6aM/wvqnLSV5zEPeusUiX5L5X/0lWfrf0QADHHhGd3QczcdCUpj911L3vg3W/sYYvuJTs3TUUkSUXxaccAS0qhxchrRYt66wiSpGLYL42aM6A8dTT+6k4aSknmPj48kzJs8qLjvd4Xgpue06DOdnLxAUHzM6+kDZ+HMZfJYuR+LtwGc2hgf5gsijff0ekUNXZiqATP7PF5mZxZ3Izoun1s4zG4LUMnvw2r+KqCKIw+3IQH03v+BCA9nMELNqbSf6tiWSrXJB3LAVGUcallcrw8V2t9EL4EhzJWrQUax5wLVMNS0+rUPA3k22Ncx4XXZS9o0MBH27Bo6BpNelZpS+/uh9KsNlY6bHCmJU9p8g7m3fVKn28H3KDYA5Pl/T8Z1ptDAVe0lXdQ2YoyyH2uyPIGHBZZIs2pDBS8R07+qN+E7Q==]]></Encrypt><AgentID><![CDATA[218]]></AgentID></xml>";
-	            InputStream inputStream = request.getInputStream();
-	            String sPostData = IOUtils.toString(inputStream,"UTF-8");
-	            log.info("sPostData......{}",sPostData);
-	    		try {
-	    			String sMsg = wxcpt.DecryptMsg(msg_signature, timestamp, nonce, sPostData);
-	    			log.info("after decrypt msg: " + sMsg);
-	    			// TODO: 解析出明文xml标签的内容进行处理
-	    			// For example:
-	    			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	    			DocumentBuilder db = dbf.newDocumentBuilder();
-	    			StringReader sr = new StringReader(sMsg);
-	    			InputSource is = new InputSource(sr);
-	    			Document document = db.parse(is);
+	          
+    			// TODO: 解析出明文xml标签的内容进行处理
+    			// For example:
+    			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    			DocumentBuilder db = dbf.newDocumentBuilder();
+    			StringReader sr = new StringReader(result);
+    			InputSource is = new InputSource(sr);
+    			Document document = db.parse(is);
 
-	    			Element root = document.getDocumentElement();
-	    			NodeList nodelist1 = root.getElementsByTagName("Content");
-	    			String Content = nodelist1.item(0).getTextContent();
-	    			log.info("Content：" + Content);
+    			Element root = document.getDocumentElement();
+    			NodeList nodelist1 = root.getElementsByTagName("Content");
+    			String Content = nodelist1.item(0).getTextContent();
+    			log.info("Content：" + Content);
 	    			
-	    		} catch (Exception e) {
-	    			// TODO
-	    			// 解密失败，失败原因请查看异常
-	    			e.printStackTrace();
-	    		}
-	            
-	        } catch (AesException e) {  
-	            e.printStackTrace();  
-	        }  
-	        if (result == null) {  
-	            result = token;  
-	        }  
-	        out.print(result);  
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}  finally {
-			if(out!=null) out.close(); 
+		} catch (Exception e) {
+			// 解密失败，失败原因请查看异常
+			e.printStackTrace();
 		}
-      
 		
 	}
 
